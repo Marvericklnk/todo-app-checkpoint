@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple task tracker by Marvin. Add, complete, filter, and save your daily tasks.">
+  <title>Daylist — Marvin's Todo App</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="./">✓ <span>daylist</span></a><span class="byline">MADE BY MARVIN</span></header>
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">A LITTLE FOCUS GOES A LONG WAY</p>
+      <h1 id="page-title">Make room for<br>what matters.</h1>
+      <p class="subtitle">Get it out of your head. Take it one task at a time.</p>
+    </section>
+    <section class="workspace" aria-label="Task tracker">
+      <div class="section-heading"><h2>My tasks</h2><span id="task-count" aria-live="polite">0 left to do</span></div>
+      <form id="task-form">
+        <label for="task-input" class="sr-only">New task</label>
+        <input id="task-input" name="task" placeholder="What do you want to get done?" maxlength="150" required autocomplete="off">
+        <button class="add-button" type="submit">Add task <span aria-hidden="true">+</span></button>
+      </form>
+      <div class="toolbar">
+        <div class="filters" role="group" aria-label="Filter tasks">
+          <button type="button" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" data-filter="active" aria-pressed="false">Active</button>
+          <button type="button" data-filter="completed" aria-pressed="false">Completed</button>
+        </div>
+        <button id="clear-completed" type="button" disabled>Clear completed</button>
+      </div>
+      <ul id="task-list" aria-label="Tasks"></ul>
+      <div id="empty-state"><span class="empty-icon" aria-hidden="true">✓</span><h3>A fresh start.</h3><p>Add your first task. Small steps count.</p></div>
+      <p id="message" role="status" aria-live="polite"></p>
+      <p id="storage-warning" role="status" hidden>Your browser cannot save tasks right now. Tasks will only stay for this visit.</p>
+      <div class="workspace-footer"><span aria-hidden="true">●</span> Saved in this browser · no account needed</div>
+    </section>
+    <p class="closing">Less noise. More progress.</p>
+  </main>
+  <footer>Daylist · A mini app built with HTML, CSS &amp; JavaScript</footer>
+</body>
+</html>
