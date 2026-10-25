@@ -8,6 +8,14 @@ const filterButtons = document.querySelectorAll('[data-filter]');
 const storageKey = 'marvin-daylist-tasks-v1';
 let tasks = [];
 let currentFilter = 'all';
+let editingTask = null;
+let editDraft = '';
+
+function focusEditButton(index) {
+  const button = list.querySelector('[data-task-index="' + index + '"] .edit-button');
+  if (button) button.focus();
+  else input.focus();
+}
 
 // Load tasks saved by this app, and ignore invalid saved data.
 try {
@@ -40,10 +48,69 @@ function renderTasks() {
     if (task.done) completed++; else remaining++;
     if (currentFilter === 'active' && task.done) return;
     if (currentFilter === 'completed' && !task.done) return;
+    const rowIndex = visibleCount;
     visibleCount++;
 
     const item = document.createElement('li');
     item.className = task.done ? 'task done' : 'task';
+    item.dataset.taskIndex = index;
+
+    if (editingTask === task) {
+      const editForm = document.createElement('form');
+      editForm.className = 'edit-form';
+      editForm.setAttribute('aria-label', 'Edit task');
+      editForm.noValidate = true;
+      const editInput = document.createElement('input');
+      editInput.type = 'text';
+      editInput.maxLength = 150;
+      editInput.value = editDraft;
+      editInput.setAttribute('aria-label', 'Task name');
+      editInput.addEventListener('input', function () {
+        editDraft = editInput.value;
+      });
+      const save = document.createElement('button');
+      save.type = 'submit';
+      save.className = 'save-button';
+      save.textContent = 'Save';
+      const cancel = document.createElement('button');
+      cancel.type = 'button';
+      cancel.className = 'edit-button';
+      cancel.textContent = 'Cancel';
+
+      function cancelEdit() {
+        editingTask = null;
+        renderTasks();
+        focusEditButton(index);
+        message.textContent = 'Changes cancelled.';
+      }
+      cancel.addEventListener('click', cancelEdit);
+      editInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          cancelEdit();
+        }
+      });
+      editForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const title = editInput.value.trim();
+        if (!title || title.length > 150) {
+          message.textContent = 'Enter a task name between 1 and 150 characters.';
+          editInput.focus();
+          return;
+        }
+        task.title = title;
+        editingTask = null;
+        saveTasks();
+        renderTasks();
+        focusEditButton(index);
+        message.textContent = 'Task updated.';
+      });
+      editForm.append(editInput, save, cancel);
+      item.appendChild(editForm);
+      list.appendChild(item);
+      return;
+    }
+
     const label = document.createElement('label');
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
@@ -58,8 +125,24 @@ function renderTasks() {
       saveTasks();
       renderTasks();
       message.textContent = task.done ? 'Task completed. Nice work!' : 'Task marked active.';
-      const nextCheckbox = list.querySelectorAll('input')[Math.min(visibleCount - 1, list.children.length - 1)];
+      const nextCheckbox = list.querySelectorAll('input')[Math.min(rowIndex, list.children.length - 1)];
       if (nextCheckbox) nextCheckbox.focus();
+      else input.focus();
+    });
+
+    const edit = document.createElement('button');
+    edit.type = 'button';
+    edit.className = 'edit-button';
+    edit.textContent = 'Edit';
+    edit.setAttribute('aria-label', 'Edit task: ' + task.title);
+    edit.addEventListener('click', function () {
+      editingTask = task;
+      editDraft = task.title;
+      renderTasks();
+      const editInput = list.querySelector('.edit-form input');
+      editInput.focus();
+      editInput.select();
+      message.textContent = 'Edit the task, then save or cancel.';
     });
 
     const remove = document.createElement('button');
@@ -74,7 +157,7 @@ function renderTasks() {
       message.textContent = 'Task deleted.';
       input.focus();
     });
-    item.append(label, remove);
+    item.append(label, edit, remove);
     list.appendChild(item);
   });
 
@@ -90,7 +173,7 @@ function renderTasks() {
 form.addEventListener('submit', function (event) {
   event.preventDefault();
   const title = input.value.trim();
-  if (!title) {
+  if (!title || title.length > 150) {
     message.textContent = 'Please write a task first.';
     input.focus();
     return;
@@ -122,6 +205,7 @@ filterButtons.forEach(function (button) {
 
 clearButton.addEventListener('click', function () {
   tasks = tasks.filter(function (task) { return !task.done; });
+  if (!tasks.includes(editingTask)) editingTask = null;
   saveTasks();
   renderTasks();
   message.textContent = 'Completed tasks cleared.';

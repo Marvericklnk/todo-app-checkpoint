@@ -50,3 +50,11 @@ footer { padding:14px 20px 28px; text-align:center; font-size:10px; color:var(--
 @keyframes appear { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
 @media(max-width:500px) { .topbar { padding:22px 20px; } .byline { font-size:8px; letter-spacing:1px; } main { margin-top:22px; padding:0 14px; } .workspace { padding:20px 16px; } form { flex-direction:column; } .add-button { padding:12px; } .toolbar { flex-wrap:wrap; } .filters button { padding:8px 10px; } }
 @media(prefers-reduced-motion:reduce) { .task { animation:none; } }
+
+.edit-button, .save-button { border:0; border-radius:6px; padding:8px; font-size:12px; }
+.edit-button { background:#edf3eb; color:var(--green); }
+.edit-button:hover { background:#dfeadb; }
+.save-button { background:var(--green); color:white; }
+.edit-form { width:100%; align-items:center; }
+.task .edit-form input { width:auto; height:auto; flex:1; padding:11px; }
+@media(max-width:500px) { .edit-form { flex-direction:row; flex-wrap:wrap; } .task .edit-form input { flex-basis:100%; } }

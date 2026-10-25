@@ -8,6 +8,7 @@ A small task tracker by Marvin, created with ChatGPT/Codex using HTML, CSS, and 
 
 ## Features
 - Add tasks with a button or Enter.
+- Edit task names, save changes, or cancel with Escape.
 - Mark tasks complete or active with a checkbox.
 - Filter All, Active, and Completed tasks.
 - Delete a task or clear completed tasks.
