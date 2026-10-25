@@ -1,5 +1,9 @@
 # Daylist — Todo App
 
+[Live demo](https://marvericklnk.github.io/todo-app-checkpoint/)
+
+![Daylist task tracker](screenshots/preview.jpg)
+
 A small task tracker by Marvin, created with ChatGPT/Codex using HTML, CSS, and plain JavaScript. No frameworks, backend, API keys, or installation required.
 
 ## Features
